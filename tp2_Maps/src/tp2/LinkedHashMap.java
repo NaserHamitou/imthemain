@@ -123,9 +123,7 @@ public class LinkedHashMap<KeyType, DataType> {
             if (map[i] != null) {
                 if (getIndex(map[i].key) == getIndex(key)) {
                     for (Node n = map[i]; n != null; n = n.next) {
-                        if (n.key == key) {
-                            if(shouldRehash())
-                                rehash();
+                        if (n.key == key) {       //Reassign date
                             oldValue = (DataType) n.data;
                             n.data = value;
                             return oldValue;
@@ -136,6 +134,7 @@ public class LinkedHashMap<KeyType, DataType> {
                             if(shouldRehash())
                                 rehash();
                             n.next = new Node<KeyType, DataType>(key, value);
+                            size++;
                             return null;
                         }
                     }
