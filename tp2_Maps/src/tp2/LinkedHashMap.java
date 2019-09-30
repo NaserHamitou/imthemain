@@ -38,21 +38,20 @@ public class LinkedHashMap<KeyType, DataType> {
      * Increases capacity by CAPACITY_INCREASE_FACTOR (multiplication) and
      * reassigns all contained values within the new map
      */
-    private void rehash() {
+    private void rehash() { // Verifier size++ dans put et autre
 
-        if(shouldRehash()){
-            Node<KeyType, DataType>[] tempMap = new Node[capacity * CAPACITY_INCREASE_FACTOR];
+            Node<KeyType, DataType>[] tempMap = map;
             capacity *= CAPACITY_INCREASE_FACTOR;
 
-            for(int i = 0;i < tempMap.length; i++)
-                tempMap[i] = null;
+            map = new Node[capacity];
+            size = 0;
 
-            for(int j = 0; j < map.length; j++){
-                tempMap[j] = map[j];
+            for(int i = 0; i < tempMap.length; i++){
+                for(Node<KeyType,DataType> n = tempMap[i]; n != null; n = n.next)
+                    put(n.key,n.data);
+
             }
 
-            map = tempMap;
-        }
     }
 
     public int size() {
@@ -74,12 +73,12 @@ public class LinkedHashMap<KeyType, DataType> {
      */
     public boolean containsKey(KeyType key) {
 
-        for(int i = 0; i < map.length; i++){   //Might want to check also the nodes in the same index (in the linkedlist) (USE NEXT() FONCTION)
-            if(map[i] != null) {
-                if (map[i].key == key)
-                    return true;
-            }
+        for(Node n = map[getIndex(key)]; n != null; n = n.next) {
+            if(n.key.equals(key))
+                return true;
         }
+
+
 
         return false;
     }
@@ -93,24 +92,12 @@ public class LinkedHashMap<KeyType, DataType> {
 
         if(!isEmpty()) {
 
-            for (int i = 0; i < map.length; i++) {
-                if (map[i] != null) {
-                    if (getIndex(map[i].key) == getIndex(key)) {
-                        for (Node n = map[i]; n != null; n = n.next) {
-                            String a = (String) n.key;
-                            String b = (String) key;
-                            if (a == b) {      //it ignores this ??
-                                System.out.println(n.data);
-                                System.out.println(n.key);
-                                return (DataType) n.data;
-                            }
-                        }
-                    }
+            for (Node n = map[getIndex(key)]; n != null; n = n.next) {
+                if (n.key.equals(key)) {
+                    return (DataType) n.data;
                 }
             }
-
         }
-        System.out.println("NOPE");
         return  null;
 
     }
@@ -126,9 +113,6 @@ public class LinkedHashMap<KeyType, DataType> {
         if(isEmpty() == true){
             map[getIndex(key)] = new Node<KeyType,DataType>(key,value);
             size++;
-            System.out.println(map[getIndex(key)].data);
-            System.out.println(map[getIndex(key)].key);
-            System.out.println("INDEX : " + getIndex(key));
             return null;
         }
 
@@ -140,28 +124,27 @@ public class LinkedHashMap<KeyType, DataType> {
                 if (getIndex(map[i].key) == getIndex(key)) {
                     for (Node n = map[i]; n != null; n = n.next) {
                         if (n.key == key) {
+                            if(shouldRehash())
+                                rehash();
                             oldValue = (DataType) n.data;
                             n.data = value;
-                            System.out.println(n.data);
-                            System.out.println(map[getIndex(key)].key);
-                            System.out.println("INDEX : " + getIndex(key));
                             return oldValue;
                         }
 
                         //Ajouter un nouveau node pour un meme index
                         else if (n.next == null) {
-                            map[getIndex(key)].next = new Node<KeyType, DataType>(key, value);
-                            System.out.println("YEET");
+                            if(shouldRehash())
+                                rehash();
+                            n.next = new Node<KeyType, DataType>(key, value);
                             return null;
                         }
                     }
                 }
                 //Assigner un node a un index vide
                 else {
+                    if(shouldRehash())
+                        rehash();
                     map[getIndex(key)] = new Node<KeyType, DataType>(key, value);
-                    System.out.println(map[getIndex(key)].data);
-                    System.out.println(map[getIndex(key)].key);
-                    System.out.println("INDEX : " + getIndex(key));
                     size++;
                     return null;
                 }
@@ -180,14 +163,12 @@ public class LinkedHashMap<KeyType, DataType> {
 
         DataType oldData;
 
-        for(int i = 0; i < map.length; i++){
-            if(map[i] != null) {
-                if (map[i].key == key) {
-                    oldData = map[i].data;
-                    map[i] = null;
-                    size--;
-                    return oldData;
-                }
+        for(Node n = map[getIndex(key)]; n != null; n = n.next ) {
+            if(n.key.equals(key)) {
+                oldData = (DataType) n.data;
+                n = n.next;
+                size--;
+                return oldData;
             }
         }
         return null;
