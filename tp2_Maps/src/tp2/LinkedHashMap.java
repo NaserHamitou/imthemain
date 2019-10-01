@@ -41,12 +41,11 @@ public class LinkedHashMap<KeyType, DataType> {
     private void rehash() { // Verifier size++ dans put et autre
 
             Node<KeyType, DataType>[] tempMap = map;
+            map = new Node[capacity* CAPACITY_INCREASE_FACTOR];
             capacity *= CAPACITY_INCREASE_FACTOR;
-
-            map = new Node[capacity];
             size = 0;
 
-            for(int i = 0; i < tempMap.length; i++){
+             for(int i = 0; i < tempMap.length; i++){
                 for(Node<KeyType,DataType> n = tempMap[i]; n != null; n = n.next)
                     put(n.key,n.data);
 
@@ -109,21 +108,23 @@ public class LinkedHashMap<KeyType, DataType> {
      */
     public DataType put(KeyType key, DataType value) { //Looks like it's working
 
+        int index = getIndex(key);
+
         //Verifier si map est vide et ajouter le node
         if(isEmpty() == true){
-            map[getIndex(key)] = new Node<KeyType,DataType>(key,value);
+            map[index] = new Node<KeyType,DataType>(key,value);
             size++;
             return null;
         }
 
         DataType oldValue;
 
-        //Trouver l'index correspondant et le node qui contient la bonne key
+        //Trouver l'index correspondant et le node qui contient la bonne key  (REFAIRE LA FACON DE CHERCHER PLUS CLEAN)
         for(int i = 0; i < map.length; i++) {
             if (map[i] != null) {
                 if (getIndex(map[i].key) == getIndex(key)) {
                     for (Node n = map[i]; n != null; n = n.next) {
-                        if (n.key == key) {       //Reassign date
+                        if (n.key.equals(key)) {       //Reassign date
                             oldValue = (DataType) n.data;
                             n.data = value;
                             return oldValue;
@@ -134,15 +135,19 @@ public class LinkedHashMap<KeyType, DataType> {
                             if(shouldRehash())
                                 rehash();
                             n.next = new Node<KeyType, DataType>(key, value);
-                            size++;
                             return null;
                         }
                     }
                 }
                 //Assigner un node a un index vide
                 else {
-                    if(shouldRehash())
+                    if(shouldRehash()) {
                         rehash();
+                        put(key,value);
+                        size++;
+                        return null;
+                    }
+
                     map[getIndex(key)] = new Node<KeyType, DataType>(key, value);
                     size++;
                     return null;

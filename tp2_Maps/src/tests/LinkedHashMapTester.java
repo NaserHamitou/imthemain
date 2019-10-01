@@ -189,6 +189,7 @@ public class LinkedHashMapTester {
         for (int i = 0; i < n ; ++i){
             String index = String.valueOf(i);
             map.put("myKey" + index, i);
+
         }
 
         boolean rehashWorks = true;
