@@ -13,25 +13,33 @@ public class Interview {
      */
     public Collection<MatchingPair> matchingPairs(Collection<Integer> values, Integer targetSum) {
 
-        //Initialisation de collection des MatchingPairs
+        //Initialisation de collection des MatchingPairs et HashMap
         Collection<MatchingPair> pairs = new ArrayList<MatchingPair>();
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
 
 
-        //--------------------------  Comment utiliser hashmap ?  --------------------------------//
+        //Verifie si element est dans hashmap
+        for (Integer n: values) {
 
+            Integer a = targetSum - n;
 
-        //Iterateur
-        Iterator<Integer> it = values.iterator();
+            if( map.containsKey(a.toString())){
+                pairs.add(new MatchingPair(n,a));
+            }
 
-        if(!values.isEmpty()) {
-
-           while (it.hasNext()){
-
-           }
+            map.put(n.toString(), n);
 
         }
+        while (pairs.iterator().hasNext()) {
+            System.out.println(pairs.iterator().next().first);
+            System.out.println(pairs.iterator().next().second);
+        }
+
+
 
         return pairs;
+
+
 
         //Code non utiliser
         /*
@@ -45,7 +53,7 @@ public class Interview {
                 }
             }
         */
-        /////////////////////////////////////////////////
+///////////////////////////////////*****************************************************//////////////////////////////
         /*
         while (it.hasNext()){
             int val1 = it.next();
@@ -58,21 +66,6 @@ public class Interview {
 
 
         }*/
-    }
-
-
-    //Node Definition
-    static class Node<Value1, Value2> {
-        final Value1 key;
-        Value2 data;
-        LinkedHashMap.Node next; // Pointer to the next node within a Linked List
-
-        Node(Value1 key, Value2 data)
-        {
-            this.key = key;
-            this.data = data;
-            next = null;
-        }
     }
 
 }

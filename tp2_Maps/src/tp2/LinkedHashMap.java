@@ -123,7 +123,7 @@ public class LinkedHashMap<KeyType, DataType> {
         for(int i = 0; i < map.length; i++) {
             if (map[i] != null) {
                 if (getIndex(map[i].key) == getIndex(key)) {
-                    for (Node n = map[i]; n != null; n = n.next) {
+                    for (Node n = map[getIndex(key)]; n != null; n = n.next) {
                         if (n.key.equals(key)) {       //Reassign date
                             oldValue = (DataType) n.data;
                             n.data = value;
