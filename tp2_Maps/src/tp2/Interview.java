@@ -2,7 +2,6 @@ package tp2;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 public class Interview {
     /**
@@ -24,17 +23,12 @@ public class Interview {
             Integer a = targetSum - n;
 
             if( map.containsKey(a.toString())){
-                pairs.add(new MatchingPair(n,a));
+                pairs.add(new MatchingPair(a,n));
             }
 
             map.put(n.toString(), n);
 
         }
-        while (pairs.iterator().hasNext()) {
-            System.out.println(pairs.iterator().next().first);
-            System.out.println(pairs.iterator().next().second);
-        }
-
 
 
         return pairs;
@@ -55,6 +49,11 @@ public class Interview {
         */
 ///////////////////////////////////*****************************************************//////////////////////////////
         /*
+
+        while (pairs.iterator().hasNext()) {
+            System.out.println(pairs.iterator().next().first);
+            System.out.println(pairs.iterator().next().second);
+        }
         while (it.hasNext()){
             int val1 = it.next();
             int val2 = it.next();

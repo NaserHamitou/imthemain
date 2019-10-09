@@ -7,7 +7,7 @@ public class LinkedHashMap<KeyType, DataType> {
     private static final int CAPACITY_INCREASE_FACTOR = 2;
 
     private Node<KeyType, DataType>[] map;
-    private int capacity; //n dans lexemple
+    private int capacity;
     private int size = 0;
 
     public LinkedHashMap() {
@@ -120,10 +120,9 @@ public class LinkedHashMap<KeyType, DataType> {
         DataType oldValue;
 
         //Trouver l'index correspondant et le node qui contient la bonne key  (REFAIRE LA FACON DE CHERCHER PLUS CLEAN)
-        for(int i = 0; i < map.length; i++) {
-            if (map[i] != null) {
-                if (getIndex(map[i].key) == getIndex(key)) {
-                    for (Node n = map[getIndex(key)]; n != null; n = n.next) {
+
+                if (map[index] != null) {
+                    for (Node n = map[index]; n != null; n = n.next) {
                         if (n.key.equals(key)) {       //Reassign date
                             oldValue = (DataType) n.data;
                             n.data = value;
@@ -141,19 +140,18 @@ public class LinkedHashMap<KeyType, DataType> {
                 }
                 //Assigner un node a un index vide
                 else {
-                    if(shouldRehash()) {
+
+                    if(shouldRehash())
+                    {
                         rehash();
                         put(key,value);
-                        size++;
                         return null;
                     }
 
-                    map[getIndex(key)] = new Node<KeyType, DataType>(key, value);
+                    map[index] = new Node<KeyType, DataType>(key, value);
                     size++;
                     return null;
                 }
-            }
-        }
 
         return null;
     }

@@ -84,10 +84,11 @@ public class InterviewTester {
         Interview myInterview = new Interview();
 
         Collection<Integer> values = new LinkedList<Integer>();
-        int n = 100;
-        for (int i = 0; i <= n; ++i) values.add(i);
+        int n = 100; //100
+        for (int i = 1; i < n; ++i)
+            values.add(i);
 
-        int targetSum = n/2;
+        int targetSum = n;
         Collection<MatchingPair> matchingPairs = myInterview.matchingPairs(values, targetSum);
         if (matchingPairs == null) return false;
 
