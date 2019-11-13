@@ -23,48 +23,19 @@ public class Interview {
             Integer a = targetSum - n;
 
             if( map.containsKey(a.toString())){
-                pairs.add(new MatchingPair(a,n));
+                for(int i = 0; i < map.get(a.toString()); i++)
+                    pairs.add(new MatchingPair(a,n));
             }
 
-            map.put(n.toString(), n);
-
+            if(map.containsKey(n.toString()))
+                map.put(n.toString(), map.get(n.toString()));
+            else
+                map.put(n.toString(),1);
         }
 
 
         return pairs;
 
-
-
-        //Code non utiliser
-        /*
-        while (it1.hasNext()) {
-                it2 = it1;
-                int val1 = it1.next();
-                while (it2.hasNext()) {
-                    int val2 = it2.next();
-                    if( val1 + val2 == targetSum )
-                        pairs.add(new MatchingPair(val1, val2));
-                }
-            }
-        */
-///////////////////////////////////*****************************************************//////////////////////////////
-        /*
-
-        while (pairs.iterator().hasNext()) {
-            System.out.println(pairs.iterator().next().first);
-            System.out.println(pairs.iterator().next().second);
-        }
-        while (it.hasNext()){
-            int val1 = it.next();
-            int val2 = it.next();
-
-            if(val1 + val2 == targetSum){
-                pairs.add(new MatchingPair(val1, val2));
-                return pairs;
-            }
-
-
-        }*/
     }
 
 }
